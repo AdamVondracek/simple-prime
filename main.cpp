@@ -47,7 +47,7 @@ void print_set(const std::set<IntT> set)
 	}
 }
 
-template<typename IntT>
+template<std::integral IntT>
 void print_set(const std::set<IntT> set, const std::string& filename)
 {
 	std::ofstream outFile;
@@ -62,7 +62,7 @@ void print_set(const std::set<IntT> set, const std::string& filename)
 int main(void)
 {
 	typedef unsigned long long ull;
-	constexpr size_t max = 1000000;
+	constexpr ull max = 1000000;
 	std::set<ull> primes;
 	fill_candidates(primes, max);
 	find_primes(primes, max);
