@@ -3,68 +3,44 @@
 #include<concepts>
 #include<set>
 #include<unordered_set>
+#include<array>
 
-template <std::integral IntT>
-void fill_candidates(std::set<IntT>& set, const IntT max_val)
+template <std::integral int_t, std::size_t _size>
+std::array<int_t, _size> 
+fill_candidates(void)
 {
-	set.insert(3);
-	for (IntT n = 6; n <= max_val; n+=6)
+  std::array<int_t, _size> numbers = {};
+  numbers[3] = (int_t)3;
+	for (int_t n = 6; n < _size - 1; n+=6)
 	{
-		set.insert(n - 1);
-		set.insert(n + 1);
+		numbers[n - 1] = n - 1;
+		numbers[n + 1] = n + 1;
 	}
+  return numbers;
 }
 
-template <std::integral IntT>
-void find_primes(std::set<IntT>& set, const IntT max)
+template <std::integral int_t, std::size_t _size>
+void find_primes(std::array<int_t, _size> &numbers)
 {
-	std::unordered_set<IntT> lookup(set.begin(), set.end());
-	IntT multiple = 0;
-	for (IntT n : set)
-	{
-		for (IntT m : set)
-		{
-			multiple = n * m;
-			if (multiple >= max)
-			{
-				break;
-			}
-
-			if (lookup.contains(multiple))
-			{
-				set.erase(multiple);
-			}
-		}
-	}
-}
-
-template<std::integral IntT>
-void print_set(const std::set<IntT> set)
-{
-	for (IntT p : set)
-	{
-		std::cout << p << std::endl;
-	}
-}
-
-template<std::integral IntT>
-void print_set(const std::set<IntT> set, const std::string& filename)
-{
-	std::ofstream outFile;
-	outFile.open(filename);
-	for (IntT p : set)
-	{
-		outFile << p << '\n';
-	}
-	outFile.close();
+  int_t multiple;
+  for(int_t n : numbers)
+  {
+    for(int_t m = 3; (multiple = n*m) < _size && n != 0; ++m)
+    {
+      numbers[multiple] = 0;
+    }
+  }
+  numbers[2] = 2;
 }
 
 int main(void)
 {
 	typedef unsigned long long ull;
-	constexpr ull max = 1000000;
-	std::set<ull> primes;
-	fill_candidates(primes, max);
-	find_primes(primes, max);
-	print_set(primes, "primes.txt");
+	constexpr ull max = 1000;
+	auto arr = fill_candidates<ull, max>();
+	find_primes<ull, max>(arr);
+	for(ull x : arr)
+  {
+    if(x != 0){ std::cout<< x << '\n'; }
+  }
 }
